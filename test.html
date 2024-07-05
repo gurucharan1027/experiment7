@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Display LaTeX Formula with User Input</title>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+    <h1>LaTeX Formula Display with User Input</h1>
+    <form id="inputForm">
+        <label for="x">x (constant):</label>
+        <input type="number" id="x" name="x" value="5"><br><br>
+        <label for="c">c:</label>
+        <input type="number" id="c" name="c"><br><br>
+        <label for="a">a:</label>
+        <input type="number" id="a" name="a"><br><br>
+        <label for="d">d:</label>
+        <input type="number" id="d" name="d"><br><br>
+        <button type="button" onclick="displayFormula()">Display Formula</button>
+    </form>
+    <h2>Result:</h2>
+    <div id="formula"></div>
+
+    <script>
+        function displayFormula() {
+            // Get input values
+            const x = parseFloat(document.getElementById('x').value);
+            const c = parseFloat(document.getElementById('c').value);
+            const a = parseFloat(document.getElementById('a').value);
+            const d = parseFloat(document.getElementById('d').value);
+
+            // Check if denominator is zero
+            if (a - d === 0) {
+                document.getElementById('formula').textContent = "Error: Division by zero.";
+                return;
+            }
+
+            // LaTeX code for the formula
+            const latexCode = `(x, \\frac{${c}x}{${a}-${d}})`;
+
+            // Set the LaTeX code into the div with id "formula"
+            document.getElementById('formula').innerHTML = `\\[${latexCode}\\]`;
+
+            // Trigger MathJax to render the formula
+            MathJax.typeset();
+        }
+    </script>
+</body>
+</html>

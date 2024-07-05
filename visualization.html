@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+	<link rel="stylesheet" href="css/style2.css">
+
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/auto-render.min.js" integrity="sha384-kWPLUVMOks5AQFrykwIup5lo0m3iMkkHrD0uJ4H5cjeGihAutqP0yW0J6dpFiVkI" crossorigin="anonymous" onload="renderMathInElement(document.body);"></script>
+      <script type="text/javascript" async
+    src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    
+
+
+<body>
+	<h2 class="pagehead">Example(Matrix )</h2>
+	<div class="container">
+
+
+
+
+
+	
+        <button class="subbtn"  onclick="exmple()">Example:</button><br>
+		<p id="exmpp" style="display: none;">T:R<sup>2</sup> &rarr; R<sup>2</sup><br>T(x, y) = (y, x)</p>
+
+        <button class="subbtn"  onclick="matX()">Matrix w.r.t. the standard bases: </button><br>
+        <p class="lt-math-14538" id="matrix" style="display: none;">\(\left( \begin{array}{rr} 0 &amp; 1 \\ 1 &amp; 0 \end{array} \right)\)</p> 
+		
+        <button class="subbtn"  onclick="chEqe()">Charcteristics Equation</button><br>
+        <p id="cheqe" style="display: none;">&lambda;<sup>2</sup> - 1 = 0</p>
+
+        <button class="subbtn"  onclick="eValues()">Eigen Values:</button><br>
+		<p id="eval" style="display: none;">1, -1</p>
+
+        <button class="subbtn"  onclick="eVector()">Eigen Vectors:</button><br>
+		<p id="evector" style="display: none;">Corresponding to 1: (x, x), x &ne; 0, x &isin; R<br>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&nbsp; Corresponding to -1: (-x, x), x &ne; 0, x &isin; R</p> 
+		<p><strong>Visualization: </strong>Enter the values of x and y to visualize eigen vectors<br>
+		x:<input type="number" id="x1"> y:<input type="number" id="y1">
+		<button type="submit" value="Submit" onclick="exmp1();">submit</button>
+		<p id="exmp1res"></p>
+		<canvas id="my-canvas" width="250" height="250"></canvas>
+		<!-- <img id="exmp1" src="images/example1.png"> -->
+            <p id="solutionexist"></p>
+            <p id="crdpoints"></p>
+		
+		
+	</div>
+	<p style="float: center; align-content:right;">
+<a href="./index copy.html" class="previous">&laquo; Previous</a></p>
+
+</body>
+<script type="text/javascript">
+	
+	
+var grid_size = 12;
+var x_axis_distance_grid_lines = 10;
+var y_axis_distance_grid_lines = 10;
+var x_axis_starting_point = { number: 1, suffix: '' };
+var y_axis_starting_point = { number: 1, suffix: '' };
+
+var canvas = document.getElementById("my-canvas");
+
+var ctx = canvas.getContext("2d");
+
+var canvas_width = canvas.width;
+var canvas_height = canvas.height;
+
+var num_lines_x = Math.floor(canvas_width/grid_size);
+var num_lines_y = Math.floor(canvas_height/grid_size);
+        
+// Draw grid lines along X-axis
+for(var i=0; i<=num_lines_x; i++) {
+    ctx.beginPath();
+    ctx.lineWidth = 1;
+    
+    // If line represents X-axis draw in different color
+    if(i == x_axis_distance_grid_lines) 
+        ctx.strokeStyle = "#000000";
+    else
+        ctx.strokeStyle = "#dcdcdc";
+    
+    if(i == num_lines_x) {
+        ctx.moveTo(0, grid_size*i);
+        ctx.lineTo(canvas_width, grid_size*i);
+    }
+    else {
+        ctx.moveTo(0, grid_size*i+0.5);
+        ctx.lineTo(canvas_width, grid_size*i+0.5);
+    }
+    ctx.stroke();
+}
+
+// Draw grid lines along Y-axis
+for(i=0; i<=num_lines_y; i++) {
+    ctx.beginPath();
+    ctx.lineWidth = 1;
+    
+    // If line represents X-axis draw in different color
+    if(i == y_axis_distance_grid_lines) 
+        ctx.strokeStyle = "#000000";
+    else
+        ctx.strokeStyle = "#dcdcdc";
+
+    if(i == num_lines_y) {
+        ctx.moveTo(grid_size*i, 0);
+        ctx.lineTo(grid_size*i, window.canvas_height);
+    }
+    else {
+        ctx.moveTo(grid_size*i+0.5, 0);
+        ctx.lineTo(grid_size*i+0.5, canvas_height);
+    }
+    
+    ctx.stroke();
+}
+
+// Translate to the new origin. Now Y-axis of the canvas is opposite to the Y-axis of the graph. So the y-coordinate of each element will be negative of the actual
+ctx.translate(y_axis_distance_grid_lines*grid_size, x_axis_distance_grid_lines*grid_size);
+
+// Ticks marks along the positive X-axis
+for(i=1; i<(num_lines_y - y_axis_distance_grid_lines); i++) {
+    ctx.beginPath();
+    ctx.lineWidth = 1;
+    ctx.strokeStyle = "#000000";
+
+    // Draw a tick mark 6px long (-3 to 3)
+    ctx.moveTo(grid_size*i+0.5, -3);
+    ctx.lineTo(grid_size*i+0.5, 3);
+    ctx.stroke();
+
+    // Text value at that point
+    ctx.font = '9px Arial';
+    ctx.textAlign = 'start';
+    ctx.fillText(x_axis_starting_point.number*i + x_axis_starting_point.suffix, grid_size*i-2, 15);
+}
+
+// Ticks marks along the negative X-axis
+for(i=1; i<y_axis_distance_grid_lines; i++) {
+    ctx.beginPath();
+    ctx.lineWidth = 1;
+    ctx.strokeStyle = "#000000";
+
+    // Draw a tick mark 6px long (-3 to 3)
+    ctx.moveTo(-grid_size*i+0.5, -3);
+    ctx.lineTo(-grid_size*i+0.5, 3);
+    ctx.stroke();
+
+    // Text value at that point
+    ctx.font = '9px Arial';
+    ctx.textAlign = 'end';
+    ctx.fillText(-x_axis_starting_point.number*i + x_axis_starting_point.suffix, -grid_size*i+3, 15);
+}
+
+// Ticks marks along the negative Y-axis
+for(i=1; i<( x_axis_distance_grid_lines); i++) {
+    ctx.beginPath();
+    ctx.lineWidth = 1;
+    ctx.strokeStyle = "#000000";
+
+    // Draw a tick mark 6px long (-3 to 3)
+    ctx.moveTo(-3, grid_size*i+0.5);
+    ctx.lineTo(3, grid_size*i+0.5);
+    ctx.stroke();
+
+    // Text value at that point
+    ctx.font = '9px Arial';
+    ctx.textAlign = 'start';
+    ctx.fillText(-y_axis_starting_point.number*i + y_axis_starting_point.suffix, 8, grid_size*i+3);
+}
+
+// Ticks marks along the positive Y-axis
+for(i=1; i<(num_lines_x - x_axis_distance_grid_lines); i++) {
+    ctx.beginPath();
+    ctx.lineWidth = 1;
+    ctx.strokeStyle = "#000000";
+
+    // Draw a tick mark 6px long (-3 to 3)
+    ctx.moveTo(-3, -grid_size*i+0.5);
+    ctx.lineTo(3, -grid_size*i+0.5);
+    ctx.stroke();
+
+    // Text value at that point
+    ctx.font = '9px Arial';
+    ctx.textAlign = 'start';
+    ctx.fillText(y_axis_starting_point.number*i + y_axis_starting_point.suffix, 8, -grid_size*i+3);
+    ctx.beginPath();
+    // ctx.arc(2*grid_size, -4*grid_size, 3, 0, 2 * Math.PI);
+    ctx.fill();
+ctx.moveTo(-10*grid_size, 10*grid_size);
+ctx.lineTo(15*grid_size, -15*grid_size);
+ctx.moveTo(15*grid_size, 15*grid_size);
+ctx.lineTo(-15*grid_size, -15*grid_size);
+
+// Draw the Path
+ctx.stroke();
+    
+}
+function exmp1(){
+
+		let x1=parseFloat(document.getElementById('x1').value);
+		let y1=parseFloat(document.getElementById('y1').value);
+
+        if(document.getElementById('x1').value.length == 0){
+            alert("Please Enter the value of x");
+            return false
+        }
+       else if(document.getElementById('y1').value.length == 0){
+            alert("Please Enter the value of y");
+            return false
+        }
+	
+        else if (((parseFloat(document.getElementById("x1").value)))==parseFloat(document.getElementById("y1").value) || x1===-y1){
+        
+         
+        document.getElementById("crdpoints").innerHTML = "An eigan vector. ";
+        document.getElementById('exmp1res').innerHTML="T("+x1+", "+y1+") = <span style='color:red;'>("+y1+", "+x1+")</span>";
+		ctx.beginPath();
+	    ctx.arc(y1*grid_size, -x1*grid_size, 3, 0, 2 * Math.PI);
+	    
+	    ctx.fillStyle = "red";
+	    ctx.fill();
+    }
+    else{
+        //document.getElementById("printpoint1cords").innerHTML = "(" + x + ", " + y + ") &notin; Range T <br><br>&#8658; Solution does not exist";
+        
+        
+        document.getElementById("crdpoints").innerHTML = "Not an eigan vector.";
+        document.getElementById('exmp1res').innerHTML="T("+x1+", "+y1+") = <span style='color:red;'>("+y1+", "+x1+")</span>";
+        ctx.beginPath();
+	    ctx.arc(y1*grid_size, -x1*grid_size, 3, 0, 2 * Math.PI);
+	    
+	    ctx.fillStyle = "red";
+	    ctx.fill();
+    }
+
+   
+
+	}
+
+
+    function exmple(){
+        document.getElementById('exmpp').style.display="";
+    }
+
+    function matX(){
+        document.getElementById('matrix').style.display="";
+    }
+    function visual(){
+        document.getElementById('lambdaxt').style.display="";
+    }
+    function eVector(){
+        document.getElementById('evector').style.display="";
+    }
+    
+    function eValues(){
+        document.getElementById('eval').style.display="";
+    }
+    function chEqe(){
+        document.getElementById('cheqe').style.display="";
+    }
+    // function visual(){
+    //     document.getElementById('lambdaxt').style.display="";
+    // }
+    // function visual(){
+    //     document.getElementById('lambdaxt').style.display="";
+    // }
+</script>
+</html>
