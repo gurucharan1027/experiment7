@@ -226,7 +226,9 @@ alert("please enter different values for 'a' and 'd'");
 
 
 
-		if(a == d){
+		if (isNaN(a) || isNaN(b) || isNaN(c) || isNaN(d)) {
+        alert("Please enter all the values.");
+    } else if(a == d){
 
 			alert("please enter different values for 'a' and 'd'");
 		}else if(a==lambda1){
