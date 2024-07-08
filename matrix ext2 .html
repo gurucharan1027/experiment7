@@ -1,0 +1,490 @@
+
+	<!DOCTYPE html>
+	<html lang="en">
+	<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Eigenvalues and Eigenvectors</title>
+	<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+	<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+	<script type="text/javascript" async="" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+	<!-- <link rel="stylesheet" href="css/style.css"> -->
+	<link rel="stylesheet" href="css/style3.css">
+	<script src="script2.js"></script>
+
+	</head>
+	<style>
+		.evaldiv{
+        display: flex;
+         align-items: center;
+
+    }
+	</style>
+	<body>
+		<h2 class="pagehead">Eigen Value and Eigen Vector of a Matrix</h2>
+	<div class="container">
+		
+	<p>Enter the values of a, c and d to choose matrix A such that a &ne; d</p>
+	<p style="color: blue; font-size: 20px;"><b>Note:</b> For the convinence of calculations "b" has been fixed to be "0" and values of "a", "d" have to be different.</p>
+	<label for="a">a:</label>
+	<input type="number" id="a" class="basisinput" step="any">
+	<label for="b">b:</label>	
+	<input type="number" id="b" value="0" class="basisinput" step="any" disabled><br>
+	<label for="c">c:</label>
+	<input type="number" id="c" class="basisinput" step="any">
+	<label for="d">d:</label>
+	<input type="number" id="d" class="basisinput" step="any"><br>
+	
+	<button id="subbtn" class="subbtn" onclick="smatrix()">Submit</button>
+	<p id="mat"></p>
+
+	<button class="subbtn"  onclick="chEqe()">Charcteristics Equation</button><br>
+	<p id="cheqe"></p>
+	
+	<div class="evaldiv">
+		<p id="cheqe0.1"></p>
+		<p id="cheqe1" style="margin-left: 1vh; text-align: center;"></p>
+	
+		</div>
+		<p id="cheqe2" ></p>
+		<p id="result1.1" style="margin: 0;"></p>
+		<p id="result1.11" style="font-size: 21px; margin-top: 0px;"></p>
+		
+		<p id="lamvalss"></p>
+	<!-- <div class="evaldiv">
+	<button id="res1btn" class="subbtn" " onclick="eigenValues()"><span class="btnhead">Eigenvalues</span></button>
+	<p id="result1" style="margin-left: 9px;"></p>
+	</div> -->
+	<!-- <p id="result1.1"></p> -->
+	<button id="res2btn" class="subbtn" " onclick="eigenVector()"><span class="btnhead">Eigenvectors</span></button><br>
+	<!-- <p id="result2"></p> -->
+	<span id="forpad"><button id="prereqbtn" class="subbtn" onclick="forprereq()">Pre-requisites</button>
+	<p id="prereq-h"></p>
+
+	
+	<p id="expln"></p>
+	
+	<button id="lam1" class="subbtn" style="display: none; background-color: goldenrod; border: 0;"><b>Eigenvectors for &lambda; <sub>1</sub> = <span id="lam1val"></span></b></button>
+	
+	<p id="see-exp"></p> 
+	<p id="matexp"></p>
+
+	<div class="evaldiv"><p id="evecres0"></p>
+	<p id="evecres"></p>
+</div>
+<p id="ttl1"></p>
+	
+	<p id="lam1.1"></p> 
+	<p id="lam1.2"></p> 
+	<!-- <a href="javascript:expln()" class="subbtn2" id="calcbtn2" style="display:none;">See Explanation</a> -->
+	
+
+	<button id="res4btn" class="subbtn" style="display: none; background-color: goldenrod; border: 0;"><b>Eigenvectors for &lambda; <sub>2</sub> = <span id="lam2val"></span></b></button>
+	<p id="lam2"></p> 
+	<!-- <a href="javascript:expln2()" class="subbtn2" id="calcbtn3" style="display:none;">See Explanation</a> -->
+	<p id="ttl2"></p>
+	<p id="see-exp2"></p> 
+	<p id="matexp2"></p>
+	<p id="expln2"></p>
+	
+	<p id="expln3"></p>
+	<p id="mats"></p>
+	<p id="expln4"></p>
+	</span>
+	</div>
+	<p style="float: center; align-content:right;">
+		<a href="./" class="previous">&laquo; Previous</a><!-- </p>
+		<p style="float: center; align-content:right;"> -->
+		<a href="./visualization.html" class="next" >Next &raquo;</a></p>
+	<script>
+		function smatrix(){
+      
+	  let a = parseFloat(document.getElementById("a").value);
+	  let d = parseFloat(document.getElementById("d").value); 
+	  let b = 0;
+	  let c = parseFloat(document.getElementById("c").value);
+	 
+		   // Loop through each input field
+	  var isValid = true;
+	  var inputs = document.getElementsByClassName("basisinput");
+	  for (var i = 0; i < inputs.length; i++) {
+		  if (inputs[i].value === "") {
+			  isValid = false;
+			  break;
+		  }
+	  }
+	  // Display alert if any input is empty
+	  if (!isValid) {
+		  alert("Please enter all the values.");
+	  }
+	    // else  if(a == d){
+		// 		alert("Please enter different values for 'a' and 'd'")
+		// 	 }
+	   else {
+		document.getElementById("mat").innerHTML ="\\[ A =  \\begin{pmatrix} "+a+" & "+b+" \\\\"  +c+" & "+d+"\\end{pmatrix} \\]";
+		MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
+		
+	  document.getElementById("res1btn").style.display="block";
+	  }
+	}
+	function eigenValues() {
+		var a = parseFloat(document.getElementById("a").value);
+		var b = parseFloat(document.getElementById("b").value);
+		var c = parseFloat(document.getElementById("c").value);
+		var d = parseFloat(document.getElementById("d").value);
+	
+		var determinant = a * d - b * c;
+		var trace = a + d;
+		var discriminant = Math.sqrt(trace * trace - 4 * determinant);
+		
+		if((trace * trace - 4 * determinant)<0){
+			document.getElementById("result1").innerHTML="";
+			document.getElementById("result2").innerHTML="";
+			document.getElementById("result1.1").innerHTML="Eigen value does not exist";
+			document.getElementById("res2btn").style.display="none";
+			return false
+		}
+		
+		var lambda1 = (trace + discriminant) / 2;
+		var lambda2 = (trace - discriminant) / 2;
+	
+		var v1 = [1, (lambda1 - a) / b];
+		var v2 = [1, (lambda2 - a) / b];
+		
+		//document.getElementById("result1").innerHTML = "&emsp; &lambda; <sub>1</sub> = " + lambda1 + "<br>&emsp; &lambda; <sub>2</sub> = " + lambda2 ;
+		
+		// document.getElementById("result1").innerHTML = "Roots of charcteristics equation";
+		//document.getElementById("result1.1").innerHTML = "i.e. Roots of charctersitcs equation (" +a+"-&lambda;)(" +d+"-&lambda;) = 0 <br> i.e. <strong> &lambda;<sub>1</sub> </strong> =" +lambda1 + ", <strong> &lambda;<sub>2</sub></strong> = " + lambda2 ;
+		
+		
+		//document.getElementById("dis").innerHTML = trace * trace - 4 * determinant;
+		document.getElementById("res2btn").style.display="block";
+		document.getElementById('lam1val').innerHTML=lambda1;
+		document.getElementById('lam2val').innerHTML=lambda2;
+	}
+	// function eigenVector() {
+	// 	var a = parseFloat(document.getElementById("a").value);
+	// 	var b = parseFloat(document.getElementById("b").value);
+	// 	var c = parseFloat(document.getElementById("c").value);
+	// 	var d = parseFloat(document.getElementById("d").value);
+	
+	// 	var determinant = a * d - b * c;
+	// 	var trace = a + d;
+	// 	var discriminant = Math.sqrt(trace * trace - 4 * determinant);
+	
+	// 	var lambda1 = (trace + discriminant) / 2;
+	// 	var lambda2 = (trace - discriminant) / 2;
+	
+	// 	var v1 = [1, (lambda1 - a) / b];
+	// 	var v2 = [1, (lambda2 - a) / b]; 
+	// 	// document.getElementById("prereqbtn").style.display="block";
+		
+		
+	// 	// document.getElementById("result2").innerHTML =
+	// 	// 	"(" + v1[0] + ", " + v1[1] + "); corresponding to eigenvalue:" + lambda1 + "<br>" +
+	// 	// 	"(" + v2[0] + ", " + v2[1] + "); corresponding to eiganvalue:" + lambda2 ;
+
+	// 		// document.getElementById("lam1").style.display="block";
+	// 		// document.getElementById("res4btn").style.display="block";
+	// }
+	function forprereq(){
+		document.getElementById("prereq-h").innerHTML =" <p>&emsp;Discussion on solution of linear equation ux + vy = 0;</p>";
+		
+		document.getElementById("expln").innerHTML ="&emsp;Case (i): u = 0, v &NotEqual; 0 ; Solution: (x, 0); x&isin;R <br>&emsp;Case (ii): u &NotEqual; 0, v = 0 ; Solution: (0, y); y&isin;R <br>&emsp;Case (iii): u &NotEqual; 0, v &NotEqual; 0 ; Solution: (x, <sup>u</sup>&frasl;<sub>v</sub> x) or (<sup>-v</sup>&frasl;<sub>u</sub>y, y); x,y&isin;R <br>&emsp;Case (iv): u = 0, v = 0 ; Solution: (x, y); x,y&isin;R <br>&emsp;(x, y) &NotEqual; (0, 0);";
+	
+	}
+	function eigenVector() {
+		var a = parseFloat(document.getElementById("a").value);
+		var b = parseFloat(document.getElementById("b").value);
+		var c = parseFloat(document.getElementById("c").value);
+		var d = parseFloat(document.getElementById("d").value);
+
+		var va = (a+ "- &lambda;")
+		var vd = (d+ "- &lambda;")
+		
+
+
+		var symb = "&lambda;" ;
+	
+		var determinant = a * d - b * c;
+		var trace = a + d;
+		var discriminant = Math.sqrt(trace * trace - 4 * determinant);
+	
+		var lambda1 = (trace + discriminant) / 2;
+		var lambda2 = (trace - discriminant) / 2;
+	
+		var v1 = [1, (lambda1 - a) / b];
+		var v2 = [1, (lambda2 - a) / b];
+
+		var det = b*b-4*a*c
+
+			var alambda=a-lambda1;
+			let dlambda=d-lambda1;
+			let postiveOfdLam = Math.abs(dlambda);
+ 
+    var trace = a + d;
+    var trace1 = a - d;
+    var trace2 = c % trace1;
+    var eq = c / postiveOfdLam;
+	var eqdec = parseFloat(eq.toFixed(2));
+
+        var latexCode = `(x, \\frac{${c}x}{${dlambda}})`;
+		var latexCode1 = `(x, \\frac{${c}x}{${postiveOfdLam}})`;
+
+
+		// if(a != lambda1){
+		// 	// Set the LaTeX code into the div with id "formula"
+            
+		// 	document.getElementById("ttl1").innerHTML ="The eigenvector corresponding to the eigen value <b>&lambda;<sub>1</sub></b> = " +lambda1+ " is =(0, 0)";
+		// 	document.getElementById("ttl2").innerHTML="Similarly we can find the eigen vector corresponding to the eigen value <b>&lambda;<sub>2</sub></b> also. ";
+		// 	document.getElementById("see-exp").innerHTML ="&emsp;Eigenvector: (x, y) satisfies AX = &lambda;X";
+		// 	document.getElementById("matexp").innerHTML ="\\[ \\begin{pmatrix} "+a+" & "+b+" \\\\"  +c+" & "+d+"\\end{pmatrix} \\begin{pmatrix} x \\\\ y \\end{pmatrix} = "+lambda1+" \\begin{pmatrix} x \\\\ y \\end{pmatrix} \\] <br>&emsp;&emsp;Equation 1: "+ a + "x+" + b + "y = " +lambda1+ "x  <br>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;" +a+ "x - " +lambda1+ "x +" +b+ "y = 0<br>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;"+alambda+"x + "+b+"y = 0<br>&emsp;&emsp;Equation 2: "+ c + "x+" + d + "y = " +lambda1+ "y  <br>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;" +c+  "x + " +d+ "y - " +lambda1+"y = 0<br>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;"+c+"x + "+dlambda+"y = 0" ;
+		// 	MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
+		// }
+		// else{
+			 // Set the LaTeX code into the div with id "formula"
+			 if(lambda1 == a && c == 0 && d - a == 0){
+
+				//for same values D - A = 0
+				document.getElementById('evecres0').innerHTML = "&emsp;&emsp;&rArr;&emsp;&emsp;y ="
+				document.getElementById('evecres').innerHTML = "(x, y)";
+				MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
+				// document.getElementById('ttl1').innerHTML = `\\[ Eigenvector: ${latexCode1}, x&isin;R&emsp;and&emsp;x&ne;0 &emsp;\\] `;
+				// MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
+				
+				document.getElementById("ttl1").innerHTML ="<li><b>Eigenvector:</b> (x, y); x&isin;R and x&ne;0</li>"
+			document.getElementById("ttl2").innerHTML="Similarly we can find the eigen vector corresponding to the eigen value <b>&lambda;<sub>2</sub></b> also. ";
+			document.getElementById("see-exp").innerHTML ="&emsp;<li>Eigenvector: (x, y) satisfies AX = &lambda;X</li>";
+			document.getElementById("matexp").innerHTML ="\\[ \\begin{pmatrix} "+a+" & "+b+" \\\\"  +c+" & "+d+"\\end{pmatrix} \\begin{pmatrix} x \\\\ y \\end{pmatrix} = "+lambda1+" \\begin{pmatrix} x \\\\ y \\end{pmatrix} \\] <br>&emsp;&emsp;&rArr;&emsp;&emsp;Equation 1: "+ a + "x+" + b + "y = " +lambda1+ "x  <br>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;" +a+ "x - " +lambda1+ "x +" +b+ "y = 0<br>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;"+alambda+"x + "+b+"y = 0<br>&emsp;&emsp;&rArr;&emsp;&emsp;Equation 2: "+ c + "x+" + d + "y = " +lambda1+ "y  <br>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;" +c+  "x + " +d+ "y - " +lambda1+"y = 0<br>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;"+c+"x "+dlambda+"y = 0" ;
+			MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
+
+			document.getElementById("res4btn").style.display="block";
+			document.getElementById("lam1").style.display="block";
+				
+			 }
+			 else if(lambda1 == a && c == 0 && d - a !== 0){
+				//for same values D - A = 0
+				document.getElementById('evecres0').innerHTML = "&emsp;&emsp;&rArr;&emsp;&emsp;y = ";
+				document.getElementById('evecres').innerHTML = `\\[ ${latexCode1}, x&isin;R\\] `;
+				MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
+				// document.getElementById('ttl1').innerHTML = `\\[ Eigenvector: ${latexCode1}, x&isin;R&emsp;and&emsp;x&ne;0 &emsp;\\] `;
+				// MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
+				
+				document.getElementById("ttl1").innerHTML ="<li><b>Eigenvector:</b> (x, 0); x&isin;R and x&ne;0</li>"
+			document.getElementById("ttl2").innerHTML="Similarly we can find the eigen vector corresponding to the eigen value <b>&lambda;<sub>2</sub></b> also. ";
+			document.getElementById("see-exp").innerHTML ="&emsp;<li>Eigenvector: (x, y) satisfies AX = &lambda;X</li>";
+			document.getElementById("matexp").innerHTML ="\\[ \\begin{pmatrix} "+a+" & "+b+" \\\\"  +c+" & "+d+"\\end{pmatrix} \\begin{pmatrix} x \\\\ y \\end{pmatrix} = "+lambda1+" \\begin{pmatrix} x \\\\ y \\end{pmatrix} \\] <br>&emsp;&emsp;&rArr;&emsp;&emsp;Equation 1: "+ a + "x+" + b + "y = " +lambda1+ "x  <br>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;" +a+ "x - " +lambda1+ "x +" +b+ "y = 0<br>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;"+alambda+"x + "+b+"y = 0<br>&emsp;&emsp;&rArr;&emsp;&emsp;Equation 2: "+ c + "x+" + d + "y = " +lambda1+ "y  <br>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;" +c+  "x + " +d+ "y - " +lambda1+"y = 0<br>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;"+c+"x "+dlambda+"y = 0" ;
+			MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
+
+			document.getElementById("res4btn").style.display="block";
+			document.getElementById("lam1").style.display="block";
+			 }
+			 else if(lambda1 == a && c !== 0 && d - a == 0){
+					document.getElementById('evecres0').innerHTML = "&emsp;&emsp;&rArr;&emsp;&emsp;y ="
+				document.getElementById('evecres').innerHTML = "(0, y)";
+				MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
+				// document.getElementById('ttl1').innerHTML = `\\[ Eigenvector: ${latexCode1}, x&isin;R&emsp;and&emsp;x&ne;0 &emsp;\\] `;
+				// MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
+				
+				document.getElementById("ttl1").innerHTML ="<li><b>Eigenvector:</b> (0, y); x&isin;R and y&ne;0</li>"
+			document.getElementById("ttl2").innerHTML="Similarly we can find the eigen vector corresponding to the eigen value <b>&lambda;<sub>2</sub></b> also. ";
+			document.getElementById("see-exp").innerHTML ="&emsp;<li>Eigenvector: (x, y) satisfies AX = &lambda;X</li>";
+			document.getElementById("matexp").innerHTML ="\\[ \\begin{pmatrix} "+a+" & "+b+" \\\\"  +c+" & "+d+"\\end{pmatrix} \\begin{pmatrix} x \\\\ y \\end{pmatrix} = "+lambda1+" \\begin{pmatrix} x \\\\ y \\end{pmatrix} \\] <br>&emsp;&emsp;&rArr;&emsp;&emsp;Equation 1: "+ a + "x+" + b + "y = " +lambda1+ "x  <br>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;" +a+ "x - " +lambda1+ "x +" +b+ "y = 0<br>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;"+alambda+"x + "+b+"y = 0<br>&emsp;&emsp;&rArr;&emsp;&emsp;Equation 2: "+ c + "x+" + d + "y = " +lambda1+ "y  <br>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;" +c+  "x + " +d+ "y - " +lambda1+"y = 0<br>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;"+c+"x "+dlambda+"y = 0" ;
+			MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
+
+			document.getElementById("res4btn").style.display="block";
+			document.getElementById("lam1").style.display="block";
+			 }
+			 else if(lambda1 == a && c !== 0 && d - a !== 0){
+				//for same values AX = LAM X
+				document.getElementById('evecres0').innerHTML = "&emsp;&emsp;&rArr;&emsp;&emsp;y ="
+				document.getElementById('evecres').innerHTML = `\\[ ${latexCode1}, x&isin;R\\] `;
+				MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
+				// document.getElementById('ttl1').innerHTML = `\\[ Eigenvector: ${latexCode1}, x&isin;R&emsp;and&emsp;x&ne;0 &emsp;\\] `;
+				// MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
+				
+				document.getElementById("ttl1").innerHTML ="<li><b>Eigenvector:</b> (x, "+eqdec+"x); x&isin;R and x&ne;0</li>"
+			document.getElementById("ttl2").innerHTML="Similarly we can find the eigen vector corresponding to the eigen value <b>&lambda;<sub>2</sub></b> also. ";
+			document.getElementById("see-exp").innerHTML ="&emsp;<li>Eigenvector: (x, y) satisfies AX = &lambda;X</li>";
+			document.getElementById("matexp").innerHTML ="\\[ \\begin{pmatrix} "+a+" & "+b+" \\\\"  +c+" & "+d+"\\end{pmatrix} \\begin{pmatrix} x \\\\ y \\end{pmatrix} = "+lambda1+" \\begin{pmatrix} x \\\\ y \\end{pmatrix} \\] <br>&emsp;&emsp;&rArr;&emsp;&emsp;Equation 1: "+ a + "x+" + b + "y = " +lambda1+ "x  <br>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;" +a+ "x - " +lambda1+ "x +" +b+ "y = 0<br>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;"+alambda+"x + "+b+"y = 0<br>&emsp;&emsp;&rArr;&emsp;&emsp;Equation 2: "+ c + "x+" + d + "y = " +lambda1+ "y  <br>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;" +c+  "x + " +d+ "y - " +lambda1+"y = 0<br>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;"+c+"x "+dlambda+"y = 0" ;
+			MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
+
+			document.getElementById("res4btn").style.display="block";
+			document.getElementById("lam1").style.display="block";
+			}
+
+			
+			//  else if(lambda1 == d){
+			// 	alert("'λ' and 'd' should not be same please enter different value. ")
+			//  }
+			 
+			//  else if (a != lambda1){
+
+			// 		//for diffrent values AX LAM X
+			//  document.getElementById('evecres').innerHTML = `\\[${latexCode},  x&isin;R\\] `;
+            // MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
+
+			// document.getElementById("ttl1").innerHTML ="The eigenvector corresponding to the eigen value <b>&lambda;<sub>1</sub></b> = " +lambda1 ;
+			// document.getElementById("ttl2").innerHTML="Similarly we can find the eigen vector corresponding to the eigen value <b>&lambda;<sub>2</sub></b> also. ";
+			// document.getElementById("see-exp").innerHTML ="&emsp;Eigenvector: (x, y) satisfies AX = &lambda;X";
+			// document.getElementById("matexp").innerHTML ="\\[ \\begin{pmatrix} "+a+" & "+b+" \\\\"  +c+" & "+d+"\\end{pmatrix} \\begin{pmatrix} x \\\\ y \\end{pmatrix} = "+lambda1+" \\begin{pmatrix} x \\\\ y \\end{pmatrix} \\] <br>&emsp;&emsp;Equation 1: "+ a + "x+" + b + "y = " +lambda1+ "x  <br>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;" +a+ "x - " +lambda1+ "x +" +b+ "y = 0<br>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;"+alambda+"x + "+b+"y = 0<br>&emsp;&emsp;Equation 2: "+ c + "x+" + d + "y = " +lambda1+ "y  <br>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;" +c+  "x + " +d+ "y - " +lambda1+"y = 0<br>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;"+c+"x + "+dlambda+"y = 0" ;
+			// MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
+
+			// // document.getElementById("lam1.1").innerHTML ="<p>&emsp;An eigenvector (x, y) satisfies the following:</p>";
+			// // document.getElementById("lam1.2").innerHTML ="&emsp;(i) (x, y) &NotEqual; (0, 0) <br>&emsp;(ii) (x, y) is a solution of <br>&nbsp;&emsp;&emsp; Equation 1: "+ alambda+"x + " + b + "y = 0<br>&nbsp;&emsp;&emsp; & <br>&emsp;&nbsp;&emsp; Equation 2: " +c+ "x + "+ dlambda + "y = 0 <br>&emsp;(iii) Solution of these equations can be obtained by using the discussion given in the prerequisites."  ;
+			// // document.getElementById("lam1").style.display="block";
+			// document.getElementById("res4btn").style.display="block";
+			// document.getElementById("lam1").style.display="block";}
+			//
+		//}
+
+           
+	}
+	
+	function forlamda2() {
+		var a = parseFloat(document.getElementById("a").value);
+		var b = parseFloat(document.getElementById("b").value);
+		var c = parseFloat(document.getElementById("c").value);
+		var d = parseFloat(document.getElementById("d").value);
+
+		var va = (a+ "- &lambda;")
+		var vd = (d+ "- &lambda;")
+		
+
+
+		var symb = "&lambda;" ;
+	
+		var determinant = a * d - b * c;
+		var trace = a + d;
+		var discriminant = Math.sqrt(trace * trace - 4 * determinant);
+	
+		var lambda1 = (trace + discriminant) / 2;
+		var lambda2 = (trace - discriminant) / 2;
+	
+		var v1 = [1, (lambda1 - a) / b];
+		var v2 = [1, (lambda2 - a) / b];
+
+		var det = b*b-4*a*c
+		
+		var alambda2=a-lambda2;
+			var dlambda2=d-lambda2;
+
+
+			document.getElementById("see-exp2").innerHTML ="&emsp;Eigenvector: (x, y) satisfies AX = &lambda;X";
+			document.getElementById("matexp2").innerHTML ="\\[ \\begin{pmatrix} "+a+" & "+b+" \\\\"  +c+" & "+d+"\\end{pmatrix} \\begin{pmatrix} x \\\\ y \\end{pmatrix} = "+lambda2+" \\begin{pmatrix} x \\\\ y \\end{pmatrix} \\] <br>&emsp;&emsp;Equation 1: ("+ a + ")x+(" + b + ")y = " +lambda2+ "x  <br>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;(" +a+ ")x - (" +lambda2+ ")x +" +b+ "y = 0<br>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;("+alambda2+")x + ("+b+")y = 0 <br>&emsp;&emsp;Equation 2: ("+ c + ")x+(" + d + ")y = " +lambda2+ "y  <br>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;" +c+ "x +(" +d+  ")y - (" +lambda2+")y = 0<br>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;("+c+")x + ("+dlambda2+")y = 0" ;
+			MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
+
+		
+			document.getElementById("lam2").innerHTML ="<p>&emsp;An eigenvector (x, y) satisfies the following: </p>&emsp;(i) (x, y) &NotEqual; (0, 0) <br>&emsp;(ii)(x, y) is a solution of <br>&emsp;&emsp;&nbsp; Equation 1: ("+ alambda2 +")x +(" + b + ")y = 0 <br>&emsp;&emsp;&nbsp; & <br>&emsp;&emsp;&nbsp; Equation 2: (" +c+ ")x + ("+ dlambda2 + ")y = 0<br>&emsp;(iii) Solution of these equations can be obtained by using the discussion given in the prerequisites."   ;
+			
+	}
+	// function expln() {
+	// 	var a = parseFloat(document.getElementById("a").value);
+	// 	var b = parseFloat(document.getElementById("b").value);
+	// 	var c = parseFloat(document.getElementById("c").value);
+	// 	var d = parseFloat(document.getElementById("d").value);
+
+	// 	var va = (a+ "- &lambda;")
+	// 	var vd = (d+ "- &lambda;")
+		
+
+
+	// 	var symb = "&lambda;" ;
+	
+	// 	var determinant = a * d - b * c;
+	// 	var trace = a + d;
+	// 	var discriminant = Math.sqrt(trace * trace - 4 * determinant);
+	
+	// 	var lambda1 = (trace + discriminant) / 2;
+	// 	var lambda2 = (trace - discriminant) / 2;
+	
+	// 	var v1 = [1, (lambda1 - a) / b];
+	// 	var v2 = [1, (lambda2 - a) / b];
+
+	// 	var det = b*b-4*a*c
+	// 	var alambda=a-lambda1;
+	// 		var dlambda=d-lambda1;
+
+		
+	// 		// document.getElementById("see-exp").innerHTML ="&emsp;Eigenvector: (x, y) satisfies AX = &lambda;X";
+	// 		// document.getElementById("matexp").innerHTML ="\\[ \\begin{pmatrix} "+a+" & "+b+" \\\\"  +c+" & "+d+"\\end{pmatrix} \\begin{pmatrix} x \\\\ y \\end{pmatrix} = "+lambda1+" \\begin{pmatrix} x \\\\ y \\end{pmatrix} \\] <br>&emsp;&emsp;Equation 1: ("+ a + ")x+(" + b + ")y = " +lambda1+ "x  <br>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;(" +a+ ")x - (" +lambda1+ ")x +" +b+ "y = 0<br>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;("+alambda+")x + ("+b+")y = 0<br>&emsp;&emsp;Equation 2: ("+ c + ")x+(" + d + ")y = " +lambda1+ "y  <br>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;" +c+  "x + (" +d+ ")y - (" +lambda1+")y = 0<br>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;("+c+")x + ("+dlambda+")y = 0" ;
+	// 		// MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
+	// }
+	function expln2() {
+		var a = parseFloat(document.getElementById("a").value);
+		var b = parseFloat(document.getElementById("b").value);
+		var c = parseFloat(document.getElementById("c").value);
+		var d = parseFloat(document.getElementById("d").value);
+
+		var va = (a+ "- &lambda;")
+		var vd = (d+ "- &lambda;")
+		var symb = "&lambda;" ;
+		var determinant = a * d - b * c;
+		var trace = a + d;
+		var discriminant = Math.sqrt(trace * trace - 4 * determinant);
+	
+		var lambda1 = (trace + discriminant) / 2;
+		var lambda2 = (trace - discriminant) / 2;
+	
+		var v1 = [1, (lambda1 - a) / b];
+		var v2 = [1, (lambda2 - a) / b];
+
+		var det = b*b-4*a*c
+		var alambda2=a-lambda2;
+			var dlambda2=d-lambda2;
+
+			document.getElementById("see-exp2").innerHTML ="&emsp;Eigenvector: (x, y) satisfies AX = &lambda;X";
+			document.getElementById("matexp2").innerHTML ="\\[ \\begin{pmatrix} "+a+" & "+b+" \\\\"  +c+" & "+d+"\\end{pmatrix} \\begin{pmatrix} x \\\\ y \\end{pmatrix} = "+lambda2+" \\begin{pmatrix} x \\\\ y \\end{pmatrix} \\] <br>&emsp;&emsp;Equation 1: ("+ a + ")x+(" + b + ")y = " +lambda2+ "x  <br>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;(" +a+ ")x - (" +lambda2+ ")x +" +b+ "y = 0<br>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;("+alambda2+")x + ("+b+")y = 0 <br>&emsp;&emsp;Equation 2: ("+ c + ")x+(" + d + ")y = " +lambda2+ "y  <br>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;" +c+ "x +(" +d+  ")y - (" +lambda2+")y = 0<br>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;("+c+")x + ("+dlambda2+")y = 0" ;
+			MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
+	}
+
+
+	function chEqe(){
+		var a = parseFloat(document.getElementById("a").value);
+		var b = parseFloat(document.getElementById("b").value);
+		var c = parseFloat(document.getElementById("c").value);
+		var d = parseFloat(document.getElementById("d").value);
+
+		var va = (a+ "- &lambda;")
+		var vd = (d+ "- &lambda;")
+		var symb = "&lambda;" ;
+		var determinant = a * d - b * c;
+		var trace = a + d;
+		var discriminant = Math.sqrt(trace * trace - 4 * determinant);
+	
+		var lambda1 = (trace + discriminant) / 2;
+		var lambda2 = (trace - discriminant) / 2;
+
+		if (isNaN(a) || isNaN(b) || isNaN(c) || isNaN(d)) {
+        alert("Please enter all the values.");
+    }
+	//else  if(a == d){
+	// 			alert("Please enter different values for 'a' and 'd'")
+	// 		 }
+		else 
+			{
+				document.getElementById('lam1val').innerHTML=lambda1;
+		document.getElementById('lam2val').innerHTML=lambda2;
+		document.getElementById("cheqe0.1").innerHTML ="&emsp;&emsp;&emsp;&emsp;i.e"; 
+		document.getElementById("cheqe1").innerHTML =" &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;("+va+") (" +vd+ ") = 0" ;
+		document.getElementById("result1.1").innerHTML = "<b>Eigen Values:</b><br>&emsp;&emsp;&emsp;&emsp;&emsp; <strong>&lambda;<sub>1</sub> </strong> =" +lambda1 + ", <strong> &lambda;<sub>2</sub></strong> = " + lambda2;
+		document.getElementById("result1.11").innerHTML =  "&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;[&because; Eigen values are roots of charcteristic equation.] "
+		//document.getElementById("cheqe2").innerHTML ="Its Roots are ("+va+") (" +vd+ ") = 0" ;
+		document.getElementById("cheqe2").innerHTML ="&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp; Roots: <strong>&lambda;<sub>1</sub> </strong> =" +lambda1 + ", <strong> &lambda;<sub>2</sub></strong> = " + lambda2;
+		
+		// document.getElementById("lamvalss").innerHTML = "i.e &emsp;<strong>&lambda;<sub>1</sub> </strong> =" +lambda1 + ", <strong> &lambda;<sub>2</sub></strong> = " + lambda2 ;
+		
+		
+	  
+	   document.getElementById("cheqe").innerHTML ="\\[ det \\begin{vmatrix} "+va+" & "+b+" \\\\"  +c+" & "+vd+"\\end{vmatrix} = 0 \\]" ;
+	//    document.getElementById("cheqe0.1").innerHTML ="i.e." ;
+	   
+	   //document.getElementById("cheqe2").innerHTML ="Roots of charcteristics equation ("+va+") (" +vd+ ") = 0" ;
+	   MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
+	}
+   }
+	</script>
+	</body>
+	</html>
+	
